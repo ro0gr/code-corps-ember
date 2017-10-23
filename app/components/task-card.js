@@ -1,21 +1,24 @@
 import EmberCan from 'ember-can';
 import Ember from 'ember';
 import createTaskUserOptions from 'code-corps-ember/utils/create-task-user-options';
+import { EKMixin as EmberKeyboardMixin, keyDown } from 'ember-keyboard';
 
 const {
   Component,
   computed,
-  computed: { alias, mapBy },
+  computed: { alias, equal, mapBy },
   get,
   getProperties,
   inject: { service },
+  on,
+  run,
   set
 } = Ember;
 
 const ICON_CLASS = 'ember-power-select-status-icon';
 const TRIGGER_CLASS = 'ember-power-select-trigger';
 
-export default Component.extend({
+export default Component.extend(EmberKeyboardMixin, {
   attributeBindings: ['data-can-reposition', 'data-model-id', 'data-model-type'],
   classNames: ['task-card'],
   classNameBindings: ['canReposition:task-card--can-reposition', 'isLoading:task-card--is-loading'],
@@ -26,7 +29,9 @@ export default Component.extend({
   store: service(),
   taskAssignment: service(),
 
+  assigning: false,
   bound: false,
+  hovering: false,
   shouldShowUsers: false,
 
   // auto-assigns 'task' property from component as ability 'model'
@@ -51,6 +56,12 @@ export default Component.extend({
   isLoading: alias('task.isLoading'),
   taskSkills: mapBy('task.taskSkills', 'skill'),
   taskUserId: alias('taskUser.id'),
+
+  init() {
+    this._super(...arguments);
+
+    set(this, 'keyboardActivated', true);
+  },
 
   // TODO: this updates selection when it changes. However, it updates while
   // the change is still processing, and rolls back if it fails.
@@ -98,7 +109,56 @@ export default Component.extend({
     }
   },
 
+  changeUser(user) {
+    let { task, taskAssignment } = getProperties(this, 'task', 'taskAssignment');
+
+    if (user) {
+      return taskAssignment.assign(task, user);
+    } else {
+      return taskAssignment.unassign(task);
+    }
+  },
+
+  mouseEnter() {
+    set(this, 'hovering', true);
+  },
+
+  mouseLeave() {
+    set(this, 'hovering', false);
+  },
+
+  selfAssign: on(keyDown('Space'), function(e) {
+    let { assigning, hovering } = getProperties(this, 'assigning', 'hovering');
+    if (!assigning && hovering) {
+      e.preventDefault();
+      if (Ember.isEqual(get(this, 'taskUser.id'), get(this, 'currentUserId'))) {
+        this.changeUser();
+      } else {
+        let user = get(this, 'currentUser.user');
+        this.changeUser(user);
+      }
+    }
+  }),
+
+  triggerAssignment: on(keyDown('KeyA'), function(e) {
+    let { assigning, hovering } = getProperties(this, 'assigning', 'hovering');
+    if (!assigning && hovering) {
+      e.preventDefault();
+      run(this, function() {
+        this.$('.ember-basic-dropdown-trigger').get(0).dispatchEvent(new MouseEvent('mousedown'));
+      });
+    }
+  }),
+
   actions: {
+    assignmentClosed() {
+      set(this, 'assigning', false);
+    },
+
+    assignmentOpened() {
+      set(this, 'assigning', true);
+    },
+
     buildSelection(option, select) {
       if (option === select.selected) {
         return null;
@@ -107,13 +167,7 @@ export default Component.extend({
     },
 
     changeUser(user) {
-      let { task, taskAssignment } = getProperties(this, 'task', 'taskAssignment');
-
-      if (user) {
-        return taskAssignment.assign(task, user);
-      } else {
-        return taskAssignment.unassign(task);
-      }
+      this.changeUser(user);
     },
 
     searchUsers(query) {

@@ -38,6 +38,8 @@
         loadingMessage=""
         matchTriggerWidth=false
         onchange=(action "changeUser")
+        onclose=(action "assignmentClosed")
+        onopen=(action "assignmentOpened")
         options=userOptions
         placeholderComponent=(component "task-card/user/unselected-item" click=(action "stopClickPropagation") task=task)
         registerAPI=(action (mut selectRemoteController))
