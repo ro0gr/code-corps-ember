@@ -7,8 +7,8 @@ const {
 } = Ember;
 
 export default Component.extend({
-  classNameBindings: ['statusClass'],
-  classNames: ['donation-goals', 'account-setup__section'],
+  classNameBindings: ['highlightClass'],
+  classNames: ['donation-goals', 'panel'],
 
   status: computed('donationsActive', 'transfersEnabled', function() {
     let donationsActive = get(this, 'donationsActive');
@@ -23,7 +23,15 @@ export default Component.extend({
     }
   }),
 
-  statusClass: computed('status', function() {
-    return `account-setup__section--${get(this, 'status')}`;
+  highlightClass: computed('status', function() {
+    let status = get(this, 'status');
+
+    if (status == 'verified') {
+      return 'panel--highlighted-green';
+    } else if (status == 'required') {
+      return 'panel--highlighted';
+    } else {
+      return '';
+    }
   })
 });

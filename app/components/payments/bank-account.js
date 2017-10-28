@@ -7,15 +7,23 @@ const {
 } = Ember;
 
 export default Component.extend({
-  classNameBindings: ['statusClass'],
-  classNames: ['bank-account', 'account-setup__section'],
+  classNameBindings: ['highlightClass'],
+  classNames: ['bank-account', 'panel', 'panel--separated'],
 
   accountNumber: null,
   routingNumber: null,
 
   status: computed.alias('stripeConnectAccount.bankAccountStatus'),
 
-  statusClass: computed('status', function() {
-    return `account-setup__section--${get(this, 'status')}`;
+  highlightClass: computed('status', function() {
+    let status = get(this, 'status');
+
+    if (status == 'verified') {
+      return 'panel--highlighted-green';
+    } else if (status == 'required') {
+      return 'panel--highlighted';
+    } else {
+      return '';
+    }
   })
 });

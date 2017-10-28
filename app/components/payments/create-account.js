@@ -4,21 +4,24 @@ import moment from 'moment';
 const {
   Component,
   computed,
-  get,
-  isEmpty
+  computed: { empty },
+  get
 } = Ember;
 
 export default Component.extend({
-  classNameBindings: ['statusClass'],
-  classNames: ['create-account', 'account-setup__section'],
+  classNameBindings: ['highlightClass'],
+  classNames: ['create-account', 'panel'],
 
-  status: computed('stripeConnectAccount.id', function() {
-    let accountId = get(this, 'stripeConnectAccount.id');
-    return isEmpty(accountId) ? 'required' : 'verified';
+  required: empty('stripeConnectAccount.id'),
+
+  status: computed('required', function() {
+    let required = get(this, 'required');
+    return required ? 'required' : 'verified';
   }),
 
-  statusClass: computed('status', function() {
-    return `account-setup__section--${get(this, 'status')}`;
+  highlightClass: computed('required', function() {
+    let required = get(this, 'required');
+    return required ? 'panel--highlighted' : 'panel--highlighted-green';
   }),
 
   actions: {

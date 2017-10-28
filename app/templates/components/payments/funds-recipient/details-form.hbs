@@ -1,5 +1,6 @@
 <div class="input-group details-form__recipient-type">
-  <p>Tell us whether a person or an organization will be running this project. Once your turn on donations, you cannot change your information.</p>
+  <p>Will a person or some other legal entity (company or organization) be running this project?</p>
+  <p>Once you enable donations, you cannot change your information.</p>
   {{#radio-button class="details-form__recipient-type" value="individual" groupValue=stripeConnectAccount.legalEntityType}}
     Individual
   {{/radio-button}}
@@ -13,7 +14,11 @@
     <div class="input-section__label">Legal entity</div>
     <div class="input-section__content">
       <div class="input-group">
-        <label for="legal-entity-business-name">Business name</label>
+        <div class="input-label">
+          <label for="legal-entity-business-name">
+            <span class="input-label__text">Business name</span>
+          </label>
+        </div>
         {{input type="text" name="legal-entity-business-name" value=stripeConnectAccount.legalEntityBusinessName}}
       </div>
       <div class="input-group">
