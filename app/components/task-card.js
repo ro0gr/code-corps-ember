@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import { mapBy, alias } from '@ember/object/computed';
-import { getProperties, get, computed } from '@ember/object';
+import { computed, get, getProperties, set } from '@ember/object';
 import { inject as service } from '@ember/service';
 import EmberCan from 'ember-can';
 
@@ -17,6 +17,7 @@ export default Component.extend({
   store: service(),
 
   bound: false,
+  hideTaskAssignmentDropdown: true,
   shouldShowUsers: false,
   task: null,
   taskUser: null,
@@ -56,5 +57,9 @@ export default Component.extend({
     if (!isLoading) {
       this.sendAction('clickedTask', task);
     }
+  },
+
+  mouseEnter() {
+    set(this, 'hideTaskAssignmentDropdown', false);
   }
 });
