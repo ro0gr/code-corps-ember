@@ -12,12 +12,8 @@ let mockStore = {
   }
 };
 
-let currentUser = get(this, 'currentUser.user');
-
-let projectUser = {
-  currentUser,
-  project: 'Code Corps',
-  role:'pending'
+const MockSuccess = {
+  createToken: () => RSVP.resolve(TokenResponse)
 };
 
 moduleFor('service:project-user', 'Unit | Service | project user', {
@@ -28,21 +24,37 @@ moduleFor('service:project-user', 'Unit | Service | project user', {
   }
 });
 
+test('it exists', function(assert) {
+  let service = this.subject();
+  assert.ok(service);
+});
+
 test('it creates a new projectUser with properties', function(assert) {
   let done = assert.async();
   let service = this.subject();
-  service.joinProject()
+
+  let currentUser = get(this, 'currentUser.user');
+
+  let projectUser = {
+      currentUser,
+      project: 'Code Corps',
+      role: 'pending' };
 
 
-  assert.equal(get(service, 'projectUser'))
+  service.joinProject(projectUser).then((result) => {
+    set(service, 'store', mockStore)
+    assert.equal(created, true);
+    done();
 
 });
 
 test('it creates a flash notification on success', function(assert) {
 let service = this.subject();
-});
 
-test('it exists', function(assert) {
-  let service = this.subject();
-  assert.ok(service);
+server.create('projectUser');
+
+andThen(() => {
+  assert.equal(getFlashMessageCount(this), 1, 'A flash message was shown.');
+
+
 });
