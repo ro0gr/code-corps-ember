@@ -17,7 +17,7 @@ export default Component.extend({
   store: service(),
 
   bound: false,
-  hideTaskAssignmentDropdown: true,
+  hasHovered: false,
   shouldShowUsers: false,
   task: null,
   taskUser: null,
@@ -60,6 +60,6 @@ export default Component.extend({
   },
 
   mouseEnter() {
-    set(this, 'hideTaskAssignmentDropdown', false);
+    set(this, 'hasHovered', true);
   }
 });
