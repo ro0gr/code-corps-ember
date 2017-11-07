@@ -6,12 +6,16 @@
 
   {{#if (eq status 'required')}}
     <section class="panel__section__content">
-      <div class="bank-account__routing">
-        <label for="routing-number">Routing Number</label>
+      <div class="input-group bank-account__routing">
+        <div class="input-label">
+          <label for="routing-number">Routing Number</label>
+        </div>
         {{input disabled=isBusy type="text" name="routing-number" value=routingNumber}}
       </div>
-      <div class="bank-account__account">
-        <label for="account-number">Account Number</label>
+      <div class="input-group bank-account__account">
+        <div class="input-label">
+          <label for="account-number">Account Number</label>
+        </div>
         {{input disabled=isBusy type="text" name="account-number" value=accountNumber}}
       </div>
       <button {{action submit (hash accountNumber=accountNumber routingNumber=routingNumber)}} disabled={{isBusy}} class="default">Submit</button>
@@ -20,16 +24,22 @@
 
   {{#if (eq status 'verified')}}
     <section class="panel__section__content">
-      <div class="bank-account__bank-name">
-        <label>Bank Name</label>
+      <div class="input-group bank-account__bank-name">
+        <div class="input-label">
+          <label>Bank Name</label>
+        </div>
         <p>{{stripeConnectAccount.bankAccountBankName}}</p>
       </div>
-      <div class="bank-account__routing">
-        <label>Routing Number</label>
+      <div class="input-group bank-account__routing">
+        <div class="input-label">
+          <label>Routing Number</label>
+        </div>
         <p>{{stripeConnectAccount.bankAccountRoutingNumber}}</p>
       </div>
-      <div class="bank-account__account">
-        <label>Account Number</label>
+      <div class="input-group bank-account__account">
+        <div class="input-label">
+          <label>Account Number</label>
+        </div>
         <p>{{stripeConnectAccount.bankAccountLast4}}</p>
       </div>
     </section>

@@ -4,7 +4,7 @@
     <p>Start accepting payments with Stripe.</p>
   </div>
 
-  {{#if (and required stripeConnectAccount)}}
+  {{#if (eq status 'required')}}
     <section class="panel__section__content">
       <div class="input-group create-account__country">
         <div class="input-label">

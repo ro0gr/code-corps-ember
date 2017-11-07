@@ -30,6 +30,7 @@ $outer-border-radius: 4px;
   margin: 20px 0;
 
   &__label {
+    font-weight: 700;
     width: 140px;
   }
 
@@ -138,7 +139,6 @@ $outer-border-radius: 4px;
     font-size: $body-font-size-normal;
     font-weight: 600;
     margin-bottom: 5px;
-
   }
 
   &__icon, &__text {
