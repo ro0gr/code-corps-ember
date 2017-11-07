@@ -3,22 +3,14 @@ import { set, get } from '@ember/object';
 import { moduleFor, test } from 'ember-qunit';
 import { getFlashMessageCount } from 'code-corps-ember/tests/helpers/flash-message';
 
-let mockStore = {
-  createRecord() {
-    return {
-      save() {
-        return RSVP.resolve({ created: true });
-      }
-    };
-  }
-};
-
 moduleFor('service:project-user', 'Unit | Service | project user', {
-  needs: ['service:current-user', 'service:flash-messages', 'service:session', 'service:metrics'],
-  beforeEach() {
-    let service = this.subject();
-    set(service, 'store', mockStore);
-  }
+
+  needs: [
+    'service:current-user',
+    'service:flash-messages',
+    'service:session',
+    'service:metrics'
+  ]
 });
 
 test('it exists', function(assert) {
@@ -29,6 +21,24 @@ test('it exists', function(assert) {
 test('it creates a new projectUser with properties', function(assert) {
   let done = assert.async();
   let service = this.subject();
+  let user = get(this, 'currentUser.user');
+
+  let mockStore = {
+    createRecord(projectUser) {
+      project:'Code Corps',
+      user,
+      role:
+      return {
+        save() {
+          return RSVP.resolve({ projectUser });
+        }
+      };
+    }
+  };
+
+  let mockFlashMessage = {
+    _flashSuccess(message)
+  }
 
   let currentUser = get(this, 'currentUser.user');
 
@@ -45,8 +55,6 @@ test('it creates a new projectUser with properties', function(assert) {
   });
 });
 
-test('it creates a flash notification on success', function(assert) {
-  let service = this.subject();
 
   service.flashMessages.create('success!').then(() => {
     assert.equal(getFlashMessageCount(this), 1, 'A flash message was shown.');
