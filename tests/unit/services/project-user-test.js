@@ -1,6 +1,7 @@
 import RSVP from 'rsvp';
 import { set, get } from '@ember/object';
 import { moduleFor, test } from 'ember-qunit';
+import { getFlashMessageCount } from 'code-corps-ember/tests/helpers/flash-message';
 
 let mockStore = {
   createRecord() {
@@ -13,7 +14,7 @@ let mockStore = {
 };
 
 moduleFor('service:project-user', 'Unit | Service | project user', {
-  needs: ['service:current-user', 'service:flash-messages'],
+  needs: ['service:current-user', 'service:flash-messages', 'service:session', 'service:metrics'],
   beforeEach() {
     let service = this.subject();
     set(service, 'store', mockStore);
@@ -46,11 +47,8 @@ test('it creates a new projectUser with properties', function(assert) {
 
 test('it creates a flash notification on success', function(assert) {
   let service = this.subject();
-  
-  service.flashMessages(
 
-  )
-andThen(() => {
+  service.flashMessages.create('success!').then(() => {
     assert.equal(getFlashMessageCount(this), 1, 'A flash message was shown.');
   });
 });
